@@ -27,7 +27,7 @@ app.use(cookieParser());
 // open routes
 app.use("/", express.static(path.join(__dirname, "/public")));
 app.use("/", require("./routes/root"));
-// app.use("/auth", require("./routes/auth"));
+app.use("/auth", require("./routes/auth"));
 app.use("/admin", require("./routes/admin"));
 app.use("/volunteer", require("./routes/volunteer"));
 app.use("/institute", require("./routes/institute"));
