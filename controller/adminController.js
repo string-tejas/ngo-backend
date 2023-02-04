@@ -32,6 +32,11 @@ const createAdmin = asyncHandler(async (req, res) => {
 
     const result = await Admin.create(userObj);
 
+    if (!result)
+        return res.status(400).json({
+            message: "Admin not created",
+        });
+
     return res.json({
         message: "Admin created",
         // todo for testing only remove later,
@@ -41,8 +46,6 @@ const createAdmin = asyncHandler(async (req, res) => {
 
 // * read admin
 const getAllAdmin = asyncHandler(async (req, res) => {
-    const { email } = req.body;
-
     const admin = await Admin.find().select("-password").lean().exec();
 
     if (!admin) {

@@ -5,7 +5,7 @@ const Admin = require("../model/Admin");
 const Institue = require("../model/Institute");
 const Volunteer = require("../model/Volunteer");
 
-const loginLogic = async (email, password, Collection) => {
+const loginLogic = async (email, password, Collection, userType) => {
     const entity = await Collection.findOne({ email }).lean().exec();
 
     if (!entity)
@@ -20,6 +20,7 @@ const loginLogic = async (email, password, Collection) => {
             {
                 _id: entity._id,
                 email: entity.email,
+                userType,
             },
             process.env.JWT_SECRET
         );
@@ -45,22 +46,22 @@ const loginFor = (userType) => {
         let result;
         switch (userType) {
             case "admin":
-                result = await loginLogic(email, password, Admin);
+                result = await loginLogic(email, password, Admin, userType);
                 break;
 
             case "volunteer":
-                result = await loginLogic(email, password, Volunteer);
+                result = await loginLogic(email, password, Volunteer, userType);
                 break;
 
             case "institute":
-                result = await loginLogic(email, password, Institue);
+                result = await loginLogic(email, password, Institue, userType);
         }
 
         if (!result.success) {
             return res.status(result.status).json({ message: result.message });
         }
 
-        res.cookie(`${userType}-token`, result.token, {
+        res.cookie(`token`, result.token, {
             sameSite: "None",
             httpOnly: true,
             // secure: true,
@@ -74,6 +75,54 @@ const loginFor = (userType) => {
     });
 };
 
+const checkUser = asyncHandler(async (req, res) => {
+    const token = req.cookies?.token;
+    if (!token) {
+        return res.status(403).json({
+            message: "Not logged In",
+        });
+    }
+
+    const decoded = jwt.decode(token, process.env.JWT_SECRET);
+
+    if (!decoded) {
+        return res.status(403).json({
+            message: "Not logged In",
+        });
+    }
+
+    if (decoded.userType === "admin") {
+        const user = await Admin.findById(decoded._id)
+            .select("-password")
+            .lean()
+            .exec();
+        return res.json({
+            user,
+        });
+    } else if (decoded.userType === "volunteer") {
+        const user = await Volunteer.findById(decoded._id)
+            .select("-password")
+            .lean()
+            .exec();
+        return res.json({
+            user,
+        });
+    } else if (decoded.userType === "institute") {
+        const user = await Institue.findById(decoded._id)
+            .select("-password")
+            .lean()
+            .exec();
+        return res.json({
+            user,
+        });
+    }
+
+    return res.status(401).json({
+        message: "Not logged in",
+    });
+});
+
 module.exports = {
     loginFor,
+    checkUser,
 };
