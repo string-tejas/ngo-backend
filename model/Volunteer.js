@@ -18,6 +18,10 @@ const VolunteerSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  institute: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("volunteers", VolunteerSchema);
