@@ -16,6 +16,7 @@ const loginLogic = async (email, password, Collection, userType) => {
         };
 
     if (await comparePassword(password, entity.password)) {
+        delete entity.password;
         const token = jwt.sign(
             {
                 _id: entity._id,
@@ -28,6 +29,7 @@ const loginLogic = async (email, password, Collection, userType) => {
         return {
             success: true,
             token,
+            user: entity,
         };
     }
     return {
@@ -70,6 +72,8 @@ const loginFor = (userType) => {
         res.json({
             message: "Login successful",
             token: result.token,
+            userType,
+            user: result.user,
         });
     });
 };

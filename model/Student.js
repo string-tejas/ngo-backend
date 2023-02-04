@@ -5,7 +5,7 @@ const Students = new mongoose.Schema({
         type: String,
         required: true,
     },
-    addresss: {
+    address: {
         type: String,
         required: true,
     },
@@ -13,11 +13,19 @@ const Students = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    // instituteAlloted: {
-    //     type: mongoose.SchemaTypes.ObjectId,
-    //     ref: "institute",
-    //     default: null,
-    // },
+    instituteAlloted: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "institute",
+        default: null,
+    },
+    stream: {
+        type: String,
+        required: true,
+    },
+    addedBy: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "volunteers",
+    },
 });
 
-module.exports = mongoose.model("volunteers", Students);
+module.exports = mongoose.model("students", Students);
