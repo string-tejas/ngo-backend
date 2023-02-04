@@ -1,15 +1,25 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const errorHandler = require("./middleware/errorHandler");
+
+const mongoose = require("mongoose");
+const connectDB = require("./config/dbConn");
+
 const PORT = process.env.PORT || 5000;
 
+// start point
+connectDB();
+
+// middlewares
 app.use(cors(corsOptions));
 
 app.use(express.json());
 
+// routing
 app.use("/", express.static(path.join(__dirname, "/public")));
 
 app.use("/", require("./routes/root"));
@@ -27,4 +37,7 @@ app.all("*", (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB");
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
