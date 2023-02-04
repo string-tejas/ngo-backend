@@ -16,7 +16,7 @@ const addStudent = expressAsyncHandler(async (req, res) => {
         address,
         age,
         stream,
-        addedBy: mongoose.Types.ObjectId(addedBy),
+        addedBy,
     };
 
     const result = await Student.create(obj);
@@ -31,6 +31,10 @@ const addStudent = expressAsyncHandler(async (req, res) => {
 const addManyStudents = expressAsyncHandler(async (req, res) => {
     const students = req.body;
 
+    // for (let i = 0; i < students.length; i++) {
+    //     students[i].addedBy = mongoose.Types.ObjectId(students[i].addedBy);
+    // }
+
     const result = await Student.insertMany(students);
 
     if (result) {
@@ -38,7 +42,17 @@ const addManyStudents = expressAsyncHandler(async (req, res) => {
     }
 });
 
+const getAllStudents = expressAsyncHandler(async (req, res) => {
+    const students = await Student.find({})
+        .populate("addedBy", "name")
+        .lean()
+        .exec();
+    if (!students) return res.status(404).json({ message: "No student found" });
+    return res.json(students);
+});
+
 module.exports = {
     addStudent,
     addManyStudents,
+    getAllStudents,
 };
