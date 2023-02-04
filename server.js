@@ -8,6 +8,8 @@ const errorHandler = require("./middleware/errorHandler");
 
 const mongoose = require("mongoose");
 const connectDB = require("./config/dbConn");
+const cookieParser = require("cookie-parser");
+const credentials = require("./middleware/credentials");
 
 const PORT = process.env.PORT || 5000;
 
@@ -15,15 +17,19 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // middlewares
+app.use(credentials);
 app.use(cors(corsOptions));
-
 app.use(express.json());
+app.use(cookieParser());
 
 // routing
+// open routes
 app.use("/", express.static(path.join(__dirname, "/public")));
-
 app.use("/", require("./routes/root"));
 
+// protected routes
+
+// page not found
 app.all("*", (req, res) => {
   res.status(404);
   if (req.accepts("html")) {
@@ -34,9 +40,9 @@ app.all("*", (req, res) => {
     res.type("txt").send("404 Not Found");
   }
 });
-
 app.use(errorHandler);
 
+// start server
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

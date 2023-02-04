@@ -1,4 +1,4 @@
-const whitelist = ["http://localhost:5000"];
+const whitelist = require("./allowedOrigins");
 
 const corsOptions = {
   origin: (origin, callback) => {
