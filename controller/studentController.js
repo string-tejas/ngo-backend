@@ -28,6 +28,17 @@ const addStudent = expressAsyncHandler(async (req, res) => {
     return res.json(400).json({ message: "Student not created" });
 });
 
+const addManyStudents = expressAsyncHandler(async (req, res) => {
+    const students = req.body;
+
+    const result = await Student.insertMany(students);
+
+    if (result) {
+        return res.json({ message: `${students.length} students added` });
+    }
+});
+
 module.exports = {
     addStudent,
+    addManyStudents,
 };

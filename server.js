@@ -30,6 +30,7 @@ app.use("/", require("./routes/root"));
 app.use("/auth", require("./routes/auth"));
 app.use("/admin", require("./routes/admin"));
 app.use("/volunteer", require("./routes/volunteer"));
+app.use("/student", require("./routes/student"));
 app.use("/institute", require("./routes/institute"));
 
 // protected routes

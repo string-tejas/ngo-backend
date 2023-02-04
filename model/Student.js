@@ -7,11 +7,9 @@ const Students = new mongoose.Schema({
     },
     address: {
         type: String,
-        required: true,
     },
     age: {
         type: Number,
-        required: true,
     },
     instituteAlloted: {
         type: mongoose.SchemaTypes.ObjectId,
@@ -20,7 +18,7 @@ const Students = new mongoose.Schema({
     },
     stream: {
         type: String,
-        required: true,
+        default: null,
     },
     addedBy: {
         type: mongoose.SchemaTypes.ObjectId,
