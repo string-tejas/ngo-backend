@@ -5,7 +5,7 @@ const Students = new mongoose.Schema({
         type: String,
         required: true,
     },
-    addresss: {
+    address: {
         type: String,
         required: true,
     },
@@ -13,11 +13,19 @@ const Students = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    // instituteAlloted: {
-    //     type: mongoose.SchemaTypes.ObjectId,
-    //     ref: "institute",
-    //     default: null,
-    // },
+    gender: {
+        type: String,
+        required: true,
+    },
+    instituteallotment: {
+        type: Boolean,
+        default: false,
+    },
+    instituteAlloted: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "institute",
+        default: null,
+    },
 });
 
 module.exports = mongoose.model("volunteers", Students);

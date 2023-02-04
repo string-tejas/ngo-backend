@@ -22,10 +22,10 @@ const InstituteSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
-    // verified: {
-    //     type: Boolean,
-    //     default: false,
-    // },
+    verified: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model("institute", InstituteSchema);
