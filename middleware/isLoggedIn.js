@@ -1,7 +1,13 @@
 const expressAsyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
+const Admin = require("../model/Admin");
+const Institute = require("../model/Institute");
+const Volunteer = require("../model/Volunteer");
 
-const isLoggedIn = expressAsyncHandler(async (req, res, next) => {
+const isLoggedIn = async (req, res, next) => {
     const token = req.cookies?.token;
+    console.log(req.cookies);
+
     if (!token) {
         return res.status(403).json({
             message: "Not logged In",
@@ -21,27 +27,26 @@ const isLoggedIn = expressAsyncHandler(async (req, res, next) => {
             .select("-password")
             .lean()
             .exec();
-        req.user = { ...user, userType };
+        req.user = { ...user, userType: decoded.userType };
         next();
     } else if (decoded.userType === "volunteer") {
         const user = await Volunteer.findById(decoded._id)
             .select("-password")
             .lean()
             .exec();
-        req.user = { ...user, userType };
+        req.user = { ...user, userType: decoded.userType };
         next();
     } else if (decoded.userType === "institute") {
-        const user = await Institue.findById(decoded._id)
+        const user = await Institute.findById(decoded._id)
             .select("-password")
             .lean()
             .exec();
-        req.user = { ...user, userType };
+        req.user = { ...user, userType: decoded.userType };
         next();
-    }
+    } else
+        return res.status(401).json({
+            message: "Not logged in",
+        });
+};
 
-    return res.status(401).json({
-        message: "Not logged in",
-    });
-});
-
-export default isLoggedIn;
+module.exports = isLoggedIn;

@@ -24,6 +24,10 @@ const Students = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "volunteers",
     },
+    addedByIns: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "institute",
+    },
 });
 
 module.exports = mongoose.model("students", Students);

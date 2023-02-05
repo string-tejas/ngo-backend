@@ -43,10 +43,8 @@ const addManyStudents = expressAsyncHandler(async (req, res) => {
 });
 
 const getAllStudents = expressAsyncHandler(async (req, res) => {
-    const students = await Student.find({})
-        .populate("addedBy", "name")
-        .lean()
-        .exec();
+    const students = await Student.find({}).populate("addedBy").lean().exec();
+    console.log(students);
     if (!students) return res.status(404).json({ message: "No student found" });
     return res.json(students);
 });

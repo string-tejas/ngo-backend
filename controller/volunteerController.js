@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const { default: mongoose } = require("mongoose");
+const Student = require("../model/Student");
 const Volunteer = require("../model/Volunteer");
 const { hashPassword } = require("../utils/hash");
 
@@ -6,7 +8,7 @@ const { hashPassword } = require("../utils/hash");
 const createVolunteer = asyncHandler(async (req, res) => {
     const { name, email, password, age, institute } = req.body;
 
-    if (!name || !email || !password || !age || !institute) {
+    if (!name || !email || !password || !age) {
         return res.status(400).json({ message: "All fields are required" });
     }
     if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -56,7 +58,28 @@ const getAllVolunteers = asyncHandler(async (req, res) => {
     return res.json(volunteers);
 });
 
+// * number of students added by volunteer
+const getNumOfStudAddedByVolunteer = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+
+    const count = await Student.find({ addedBy: _id }).count().exec();
+    console.log(count);
+
+    return res.json({
+        count,
+    });
+});
+
+const getStudentEnrolledByVolunteer = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const students = await Student.find({ addedBy: _id }).lean().exec();
+
+    return res.json(students);
+});
+
 module.exports = {
     createVolunteer,
     getAllVolunteers,
+    getNumOfStudAddedByVolunteer,
+    getStudentEnrolledByVolunteer,
 };
