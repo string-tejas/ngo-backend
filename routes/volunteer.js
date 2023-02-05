@@ -9,7 +9,8 @@ router
 
 router
     .route("/contribution")
-    .get(isLoggedIn, volunteerController.getNumOfStudAddedByVolunteer);
+    .get(isLoggedIn, volunteerController.getNumOfStudAddedByVolunteer)
+    .post(volunteerController.getCountEnrollById);
 
 router
     .route("/enrolled")

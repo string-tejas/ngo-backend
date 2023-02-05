@@ -77,9 +77,22 @@ const getStudentEnrolledByVolunteer = asyncHandler(async (req, res) => {
     return res.json(students);
 });
 
+const getCountEnrollById = asyncHandler(async (req, res) => {
+    const { _id } = req.body;
+    console.log(_id);
+    const count = await Student.find({ addedBy: _id }).count().exec();
+
+    console.log(count);
+
+    return res.json({
+        count: count || 0,
+    });
+});
+
 module.exports = {
     createVolunteer,
     getAllVolunteers,
     getNumOfStudAddedByVolunteer,
     getStudentEnrolledByVolunteer,
+    getCountEnrollById,
 };

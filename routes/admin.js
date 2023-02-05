@@ -6,4 +6,6 @@ router
     .get(adminController.getAllAdmin)
     .post(adminController.createAdmin);
 
+router.route("/issue-cert").post(adminController.sendCertificate);
+
 module.exports = router;
